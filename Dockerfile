@@ -8,10 +8,8 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Copy source code
+# Copy all files and build
 COPY . .
-
-# Build Next.js app for standalone output
 RUN npm run build
 
 # ----------------------------
@@ -20,21 +18,16 @@ RUN npm run build
 FROM node:18-alpine AS runner
 WORKDIR /app
 
-# Create a non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# Copy standalone output
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/.next/standalone ./ 
+# Copy standalone output from builder
+COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
-# Switch to non-root user
 USER appuser
-
-# Production environment
 ENV NODE_ENV=production
 EXPOSE 3000
 
-# Run the standalone server
+# Start server
 CMD ["node", "server.js"]
