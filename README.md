@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Perfect! Let’s create a ready-to-submit README.md for your assessment. You can copy this directly into your repository. I’ll make it clean, complete, and matching your project requirements.
 
-## Getting Started
+Next.js DevOps Assessment Submission
+Project Title
 
-First, run the development server:
+Containerize and Deploy a Next.js Application using Docker, GitHub Actions, and Minikube
 
-```bash
+1️⃣ Project Overview
+
+This project demonstrates the following:
+
+Containerizing a Next.js application using Docker with production-ready best practices.
+
+Automating Docker image build and push to GitHub Container Registry (GHCR) via GitHub Actions.
+
+Deploying the containerized app to Kubernetes (Minikube) using manifests.
+
+Implementing health checks and replicas for production-grade deployment.
+
+2️⃣ Prerequisites
+
+Make sure you have the following installed:
+
+Node.js v18+
+
+Docker
+
+kubectl
+
+Minikube
+
+Git
+
+3️⃣ Local Setup and Run
+
+Clone the repository:
+
+git clone https://github.com/nanii5656-nani/nextjs-devops-starter.git
+cd nextjs-devops-starter
+
+Install dependencies:
+
+npm ci
+
+Run locally:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Production build:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+npm run build
+npm start
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Your app will run on http://localhost:3000.
 
-## Learn More
+4️⃣ Docker
+Build Docker Image Locally
+docker build -t nextjs-devops-starter:latest .
 
-To learn more about Next.js, take a look at the following resources:
+Run Docker Container
+docker run -p 3000:3000 nextjs-devops-starter:latest
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+App will be accessible at http://localhost:3000.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5️⃣ GitHub Actions (CI/CD)
 
-## Deploy on Vercel
+Workflow path: .github/workflows/ci.yml
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+On every push to master, GitHub Actions will:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Build the Docker image.
+
+Tag the image with latest and the commit SHA.
+
+Push the image to GitHub Container Registry (GHCR).
+
+GHCR Image URL:
+https://github.com/nanii5656-nani/nextjs-devops-starter/pkgs/container/nextjs-devops-starter
+
+6️⃣ Kubernetes Deployment
+Manifests Folder
+
+All Kubernetes manifests are in the k8s/ folder:
+
+deployment.yaml – defines Deployment with 2 replicas, liveness/readiness probes.
+
+service.yaml – exposes the app via NodePort service.
+
+Deploy to Minikube
+
+Start Minikube:
+
+minikube start
+
+Apply manifests:
+
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+
+Restart deployment (if needed):
+
+kubectl rollout restart deployment my-nextjs-app
+
+Check pods status:
+
+kubectl get pods -w
+
+Access app in browser:
+
+minikube service my-nextjs-app-service
+
+7️⃣ Project Structure
+nextjs-devops-starter/
+│
+├─ .github/workflows/ci.yml
+├─ Dockerfile
+├─ k8s/
+│ ├─ deployment.yaml
+│ └─ service.yaml
+├─ package.json
+├─ package-lock.json
+├─ next.config.ts
+├─ pages/ or app/ (Next.js app)
+└─ public/
+
+8️⃣ Notes
+
+Dockerfile is multi-stage for optimized builds.
+
+Health checks are configured for Kubernetes deployment.
+
+CI/CD pushes images automatically to GHCR for easy deployment.
+
+Application tested locally and deployed successfully on Minikube.
