@@ -15,39 +15,19 @@ spec:
         app: my-nextjs-app
     spec:
       containers:
-        - name: nextjs-container
+        - name: app
           image: ghcr.io/nanii5656-nani/nextjs-devops-starter:latest
           ports:
             - containerPort: 3000
-          env:
-            - name: NODE_ENV
-              value: "production"
-            - name: PORT
-              value: "3000"
           readinessProbe:
             httpGet:
-              path: /
+              path: /api/health
               port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /
+              path: /api/health
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 20
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-nextjs-app-service
-  labels:
-    app: my-nextjs-app
-spec:
-  selector:
-    app: my-nextjs-app
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 3000
-  type: NodePort
