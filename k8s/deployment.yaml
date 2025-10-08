@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nextjs-app
+  labels:
+    app: my-nextjs-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-nextjs-app
+  template:
+    metadata:
+      labels:
+        app: my-nextjs-app
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/nanii5656-nani/nextjs-devops-starter:latest
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
